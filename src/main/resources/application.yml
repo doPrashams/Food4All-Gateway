@@ -1,0 +1,34 @@
+logging:
+    level:
+        org:
+            springframework:
+                web: DEBUG
+server:
+    port: 8081
+spring:
+    cloud:
+        config:
+            import-check:
+                enabled: false
+        gateway:
+            default-filters:
+              - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            globalcors:
+              corsConfigurations:
+                '[/**]':
+                  allowedOrigins: "http://localhost:3000"
+                  allowedMethods: "*"
+                  allowedHeaders: "*"
+            routes:
+            -   id: user-service
+                predicates:
+                - Path=/users/**
+                uri: http://localhost:8080/users
+            -   id: donors-service
+                predicates:
+                - Path=/donors/**
+                uri: http://localhost:8080/donors
+            -   id: hotspot-service
+                predicates:
+                - Path=/hotspot/**
+                uri: http://localhost:8080/hotspot
